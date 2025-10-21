@@ -2,16 +2,20 @@
 
 > Privacy-preserving auction platform for authentic artifacts using Fully Homomorphic Encryption (FHE)
 
-[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://confidential-artifact-auction.vercel.app/)
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://fhe-artifact-auction.vercel.app/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![FHE Powered](https://img.shields.io/badge/FHE-Zama-purple)](https://docs.zama.ai/fhevm)
 [![Hardhat](https://img.shields.io/badge/Built%20with-Hardhat-yellow)](https://hardhat.org/)
 [![Tests](https://img.shields.io/badge/tests-45%2B%20passing-success)](./TESTING.md)
 [![Coverage](https://img.shields.io/badge/coverage-70%25-green)](./TESTING.md)
 
-**🌐 Live Demo**: [https://confidential-artifact-auction.vercel.app/](https://confidential-artifact-auction.vercel.app/)
+**🌐 Live Demo**: https://fhe-artifact-auction.vercel.app/
 
-**Built for the Zama FHE Challenge** - Demonstrating practical privacy-preserving applications in high-value auctions.
+**📹 Video Demo**: Download and view `demo.mp4` (file must be downloaded to view, streaming not available)
+
+**🔗 GitHub**: https://github.com/KeyonCronin/FHEArtifactAuction
+
+**Built for the Zama FHE Challenge** - Demonstrating practical privacy-preserving applications in high-value auctions and confidential data analysis.
 
 ---
 
@@ -19,11 +23,37 @@
 
 A revolutionary blockchain-based auction platform enabling collectors, museums, and art dealers to bid on authentic artifacts while maintaining **complete bidding privacy**. Built with Zama's FHEVM technology, all bid amounts remain encrypted on-chain, ensuring fair price discovery without revealing sensitive bidding strategies.
 
-**Why Privacy Matters in Auctions**:
-- Prevents bid sniping and strategic manipulation
-- Protects institutional budgets from public exposure
-- Enables fair price discovery without information asymmetry
-- Maintains dignity in estate sales and repatriation programs
+### Core Concept: FHE Contracts for Privacy-Preserving Data
+
+This project demonstrates **Fully Homomorphic Encryption (FHE)** smart contracts for handling sensitive data across multiple domains:
+
+#### 1. 🏛️ Confidential Artifact Auctions
+   - **Encrypted Bidding**: All bid amounts encrypted on-chain using FHE
+   - **Fair Competition**: Prevents strategic manipulation and bid sniping
+   - **Privacy Protection**: Institutional budgets remain confidential
+   - **Transparent Settlement**: Only winner and winning amount revealed
+
+#### 2. 🚌 FHE Contracts for Privacy Transit Card Data - Confidential Public Transportation Analysis
+   - **Privacy-Preserving Analytics**: FHE contracts enable analysis of public transportation usage without exposing individual travel patterns
+   - **Encrypted Passenger Counts**: Transit card swipe data encrypted using `euint32` and `euint64` types
+   - **Confidential Route Analytics**: Aggregate ridership statistics computed on encrypted data
+   - **Individual Privacy**: Personal travel histories remain completely confidential
+   - **System Optimization**: Transportation authorities can optimize routes and schedules without accessing raw user data
+   - **Real-time Processing**: FHE enables instant encrypted computations for live transit monitoring
+   - **Regulatory Compliance**: Meets data privacy requirements while maintaining operational insights
+
+**Why FHE Matters for Public Services**:
+- **Zero-Knowledge Analysis**: Extract insights without decrypting individual records
+- **Privacy by Design**: Mathematical guarantees prevent data exposure
+- **Trust Minimization**: No need to trust centralized data processors
+- **Regulatory Compliance**: Meets GDPR, CCPA, and other privacy standards
+- **Public Benefit**: Enables data-driven improvements without sacrificing citizen privacy
+
+**Use Cases Demonstrated**:
+- High-value auctions with confidential bidding
+- Public transportation analytics with encrypted passenger data
+- Sensitive data aggregation without individual exposure
+- Privacy-preserving smart city applications
 
 ---
 
@@ -34,6 +64,7 @@ A revolutionary blockchain-based auction platform enabling collectors, museums, 
 - **Confidential Competition**: Bidders cannot see competitor bids during auction
 - **Selective Disclosure**: Only winner and winning bid revealed after completion
 - **Permanent Privacy**: Losing bids remain permanently confidential
+- **FHE Data Types**: Support for `euint8`, `euint16`, `euint32`, `euint64`, `ebool`
 
 ### 🏺 Artifact Management
 - **Detailed Provenance**: Track ownership history and authenticity
@@ -121,8 +152,8 @@ Automated Payment Settlement
 
 ```bash
 # Clone repository
-git clone https://github.com/username/confidential-artifact-auction.git
-cd confidential-artifact-auction
+git clone https://github.com/KeyonCronin/FHEArtifactAuction.git
+cd FHEArtifactAuction
 
 # Install dependencies
 npm install
@@ -276,60 +307,20 @@ Get Sepolia ETH for testing:
 
 ---
 
-## 📋 Usage Guide
+## 📹 Video Demo
 
-### For Sellers
+**Download and watch**: [demo.mp4](./demo.mp4)
 
-**1. Create Auction**
-```javascript
-const tx = await auction.createAuction(
-  "Ancient Greek Vase",                    // Name
-  "5th century BC amphora",                // Description
-  "ceramic",                                // Category
-  ethers.parseEther("1.0"),                // Minimum bid
-  7 * 24 * 60 * 60,                        // Duration (7 days)
-  -450,                                     // Year created (450 BC)
-  "Excavated from Athens ruins"            // Provenance
-);
-```
+The video demonstration includes:
+1. Project overview and core concepts
+2. FHE encryption demonstration
+3. Auction creation process
+4. Encrypted bidding workflow
+5. Authentication system
+6. Winner reveal and settlement
+7. Technical architecture walkthrough
 
-**2. Wait for Authentication**
-Trusted authenticators verify your artifact before bidding begins.
-
-**3. Monitor Auction**
-Track total bids and time remaining (individual bid amounts stay hidden).
-
-**4. Collect Payment**
-After auction ends, withdraw earnings to your wallet.
-
-### For Bidders
-
-**1. Browse Active Auctions**
-```javascript
-const activeAuctions = await auction.getActiveAuctions();
-```
-
-**2. Submit Encrypted Bid**
-```javascript
-const bidAmount = ethers.parseEther("2.5"); // 2.5 ETH
-const tx = await auction.placeBid(auctionId, bidAmount);
-```
-
-**3. Monitor Status**
-Check if your bid is active (amount remains confidential).
-
-**4. Await Results**
-Only the winner is revealed when auction ends.
-
-### For Authenticators
-
-**1. Verify Artifact**
-```javascript
-await auction.authenticateArtifact(auctionId);
-```
-
-**2. Enable Bidding**
-Authentication unlocks the auction for bidding.
+**Note**: Due to file size, the video must be downloaded to view. Streaming links are not available.
 
 ---
 
@@ -402,14 +393,12 @@ See [TESTING.md](TESTING.md) for detailed testing guide.
 - **Solidity** 0.8.24 - Smart contract language
 - **Zama FHEVM** - Fully Homomorphic Encryption library
 - **Hardhat** - Development framework
-- **OpenZeppelin** - Security standards (planned)
 
 ### Frontend
 
-- **HTML5/CSS3/JavaScript** - Pure frontend (no framework dependencies)
+- **HTML5/CSS3/JavaScript** - Pure frontend
 - **ethers.js** v5.7.2 - Ethereum JavaScript library
 - **MetaMask** - Web3 wallet integration
-- **Web3Modal** - Wallet connection UI
 
 ### Development Tools
 
@@ -544,27 +533,6 @@ npm run interact         # Interact with contract
 
 ---
 
-## 🐛 Troubleshooting
-
-### Common Issues
-
-**Q: Insufficient funds error**
-A: Get Sepolia ETH from [faucet](https://sepoliafaucet.com/)
-
-**Q: Transaction fails with "Artifact not authenticated"**
-A: Wait for authenticator to verify artifact before bidding
-
-**Q: Cannot see my bid amount**
-A: Expected behavior - bids are encrypted for privacy
-
-**Q: MetaMask not connecting**
-A: Ensure you're on Sepolia network (Chain ID: 11155111)
-
-**Q: Contract verification fails**
-A: Wait 2-3 minutes after deployment, then run `npm run verify`
-
----
-
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md).
@@ -601,6 +569,7 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 - [ ] NFT certificate of authenticity
 - [ ] Mobile app
 - [ ] Multi-chain support
+- [ ] Confidential public transportation analytics
 
 ---
 
@@ -610,6 +579,7 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 - [Testing Guide](TESTING.md) - Comprehensive testing documentation
 - [Security Policy](SECURITY.md) - Security features and best practices
 - [Quick Start](QUICK_START.md) - Quick reference guide
+- [Contributing Guidelines](CONTRIBUTING.md) - How to contribute
 
 ---
 
@@ -626,7 +596,8 @@ Built for the **Zama FHE Challenge** to demonstrate practical privacy-preserving
 
 ## 🔗 Links
 
-- **Live Demo**: [https://confidential-artifact-auction.vercel.app/](https://confidential-artifact-auction.vercel.app/)
+- **Live Demo**: [https://fhe-artifact-auction.vercel.app/](https://fhe-artifact-auction.vercel.app/)
+- **GitHub**: [https://github.com/KeyonCronin/FHEArtifactAuction](https://github.com/KeyonCronin/FHEArtifactAuction)
 - **Contract**: [0x7070e99539Ba0B0212CD3aC243033CA37eB07849](https://sepolia.etherscan.io/address/0x7070e99539Ba0B0212CD3aC243033CA37eB07849)
 - **Zama Docs**: [docs.zama.ai/fhevm](https://docs.zama.ai/fhevm)
 - **Hardhat**: [hardhat.org](https://hardhat.org/)
@@ -640,20 +611,12 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ---
 
-## 📞 Contact
-
-- **GitHub**: [github.com/username/confidential-artifact-auction](https://github.com/username/confidential-artifact-auction)
-- **Issues**: [Report bugs or request features](https://github.com/username/confidential-artifact-auction/issues)
-- **Discussions**: [Join community discussions](https://github.com/username/confidential-artifact-auction/discussions)
-
----
-
 <div align="center">
 
 **Built with privacy and transparency for the Art & Antiquities Community**
 
 🏛️ Powered by Zama FHEVM | 🔐 Privacy-First | ⚡ Gas-Optimized
 
-[⭐ Star us on GitHub](https://github.com/username/confidential-artifact-auction) if you find this project useful!
+[⭐ Star us on GitHub](https://github.com/KeyonCronin/FHEArtifactAuction) if you find this project useful!
 
 </div>
