@@ -309,7 +309,7 @@ Get Sepolia ETH for testing:
 
 ## 📹 Video Demo
 
-**Download and watch**: [demo.mp4](./demo.mp4)
+**Download and watch**: [demo.mp4]
 
 The video demonstration includes:
 1. Project overview and core concepts
