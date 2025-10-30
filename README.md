@@ -106,7 +106,7 @@ This project demonstrates **Fully Homomorphic Encryption (FHE)** smart contracts
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    Frontend (HTML/JS/CSS)                   │
+│              Frontend (React + TypeScript + Vite)           │
 │  ├─ MetaMask Integration (Web3 Wallet)                     │
 │  ├─ ethers.js (Blockchain Communication)                   │
 │  └─ Real-time Auction Display                              │
@@ -436,14 +436,7 @@ See [TESTING.md](TESTING.md) for detailed testing guide.
 
 We offer **two frontend implementations** to suit different development preferences:
 
-#### Main Application (Classic)
-- **HTML5/CSS3/JavaScript** - Pure frontend implementation
-- **ethers.js** v5.7.2 - Ethereum JavaScript library
-- **MetaMask** - Web3 wallet integration
-- **Zero Build Step** - Direct browser execution
-- **Simple Deployment** - Static file hosting
-
-#### Modern Auction dApp (`/auction-dapp`) ⭐ NEW
+#### Modern React Application (`/auction-dapp`) ⭐ MAIN
 - **React** 18.2.0 - Modern UI library with component architecture
 - **TypeScript** 5.0.0 - Type-safe development with IntelliSense
 - **Vite** 5.0.0 - Next-generation frontend build tool
@@ -451,9 +444,16 @@ We offer **two frontend implementations** to suit different development preferen
 - **ethers.js** v6.9.0 - Latest Ethereum library
 - **React Hooks** - useFhevmClient, useEncrypt for FHE operations
 
+#### Legacy Demo Application (Root Directory)
+- **HTML5/CSS3/JavaScript** - Pure frontend implementation
+- **ethers.js** v5.7.2 - Ethereum JavaScript library
+- **MetaMask** - Web3 wallet integration
+- **Zero Build Step** - Direct browser execution
+- **Simple Deployment** - Static file hosting
+
 #### Comparison Table
 
-| Feature | Classic Frontend | Modern React dApp |
+| Feature | Legacy Demo | Modern React dApp |
 |---------|-----------------|-------------------|
 | **Technology** | Vanilla JS | React + TypeScript |
 | **Build Tool** | None | Vite (HMR) |
