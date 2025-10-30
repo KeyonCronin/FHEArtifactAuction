@@ -19,6 +19,20 @@
 
 ---
 
+## ⭐ What's New - Modern React dApp
+
+We've added a **production-ready React application** with cutting-edge web technologies:
+
+- 🚀 **React 18 + TypeScript** - Type-safe, component-based architecture
+- ⚡ **Vite Build Tool** - Lightning-fast HMR for instant development feedback
+- 🔐 **FHEVM SDK Integration** - Built-in React hooks for encrypted operations
+- 📦 **Modern Developer Experience** - Professional tooling and best practices
+- 🎯 **Production-Ready** - Optimized builds with code splitting and tree-shaking
+
+**Location**: `/auction-dapp` | **Get Started**: `cd auction-dapp && npm run dev`
+
+---
+
 ## 🎯 Overview
 
 A revolutionary blockchain-based auction platform enabling collectors, museums, and art dealers to bid on authentic artifacts while maintaining **complete bidding privacy**. Built with Zama's FHEVM technology, all bid amounts remain encrypted on-chain, ensuring fair price discovery without revealing sensitive bidding strategies.
@@ -162,6 +176,30 @@ npm install
 cp .env.example .env
 # Edit .env with your credentials
 ```
+
+### 🎨 Modern React dApp (NEW!)
+
+Experience the auction platform with our modern React interface:
+
+```bash
+# Navigate to React dApp
+cd auction-dapp
+
+# Install dependencies (if not done from root)
+npm install
+
+# Start development server with HMR
+npm run dev
+```
+
+**Features**:
+- ⚡ Lightning-fast development with Vite HMR
+- 🎯 Type-safe development with TypeScript
+- 🔐 Built-in FHEVM SDK integration
+- 📦 Modern React 18 with hooks
+- 🎨 Clean, responsive UI
+
+Open `http://localhost:5173` to see the React dApp in action!
 
 ### Configuration
 
@@ -394,11 +432,47 @@ See [TESTING.md](TESTING.md) for detailed testing guide.
 - **Zama FHEVM** - Fully Homomorphic Encryption library
 - **Hardhat** - Development framework
 
-### Frontend
+### Frontend Applications
 
-- **HTML5/CSS3/JavaScript** - Pure frontend
+We offer **two frontend implementations** to suit different development preferences:
+
+#### Main Application (Classic)
+- **HTML5/CSS3/JavaScript** - Pure frontend implementation
 - **ethers.js** v5.7.2 - Ethereum JavaScript library
 - **MetaMask** - Web3 wallet integration
+- **Zero Build Step** - Direct browser execution
+- **Simple Deployment** - Static file hosting
+
+#### Modern Auction dApp (`/auction-dapp`) ⭐ NEW
+- **React** 18.2.0 - Modern UI library with component architecture
+- **TypeScript** 5.0.0 - Type-safe development with IntelliSense
+- **Vite** 5.0.0 - Next-generation frontend build tool
+- **@fhevm/sdk** - Universal FHEVM SDK with React hooks
+- **ethers.js** v6.9.0 - Latest Ethereum library
+- **React Hooks** - useFhevmClient, useEncrypt for FHE operations
+
+#### Comparison Table
+
+| Feature | Classic Frontend | Modern React dApp |
+|---------|-----------------|-------------------|
+| **Technology** | Vanilla JS | React + TypeScript |
+| **Build Tool** | None | Vite (HMR) |
+| **Type Safety** | ❌ No | ✅ Full TypeScript |
+| **Development Speed** | Standard | ⚡ Fast (HMR) |
+| **SDK Integration** | Manual | 🔐 Built-in hooks |
+| **Component Reusability** | Limited | ✅ High |
+| **Bundle Optimization** | Manual | ✅ Automatic |
+| **Developer Experience** | Basic | 🎯 Advanced |
+| **Recommended For** | Quick demos | Production apps |
+
+#### Modern Stack Features
+- ⚡ **Hot Module Replacement (HMR)** - Instant updates during development
+- 🎯 **Type Safety** - Full TypeScript support with strict mode
+- 🔧 **Modern Build Tools** - Vite for fast builds and optimized production bundles
+- 🔐 **SDK Integration** - Framework-agnostic FHEVM SDK with React hooks
+- 📦 **Component-Based** - Reusable React components for scalable development
+- 🚀 **Optimized Bundle** - Tree-shaking and code-splitting for minimal bundle size
+- 💪 **Production-Ready** - Best practices for modern web applications
 
 ### Development Tools
 
@@ -493,10 +567,20 @@ confidential-artifact-auction/
 │   └── simulate.js             # Full simulation
 ├── test/                        # Test suite
 │   └── ConfidentialArtifactAuction.test.js
+├── auction-dapp/               # Modern React dApp
+│   ├── src/                    # React source code
+│   │   ├── App.tsx             # Main React component
+│   │   ├── App.css             # Component styles
+│   │   ├── main.tsx            # React entry point
+│   │   └── vite-env.d.ts       # TypeScript declarations
+│   ├── package.json            # React app dependencies
+│   ├── vite.config.ts          # Vite configuration
+│   ├── tsconfig.json           # TypeScript config
+│   └── README.md               # React app documentation
 ├── .github/workflows/          # CI/CD pipelines
 │   └── test.yml                # Automated testing
 ├── hardhat.config.js           # Hardhat configuration
-├── package.json                # Dependencies & scripts
+├── package.json                # Root dependencies & scripts
 └── README.md                   # This file
 ```
 
@@ -512,6 +596,12 @@ npm run node             # Start local node
 npm test                 # Run tests
 npm run coverage         # Coverage report
 npm run gas:report       # Gas analysis
+
+# Frontend Development
+cd auction-dapp          # Navigate to React dApp
+npm run dev              # Start Vite dev server (HMR enabled)
+npm run build            # Build for production
+npm run preview          # Preview production build
 
 # Linting & Formatting
 npm run lint             # Lint all code
@@ -555,21 +645,26 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 - ✅ Artifact authentication system
 - ✅ Automated settlement
 - ✅ Sepolia testnet deployment
+- ✅ **Modern React dApp with TypeScript + Vite** ⭐ NEW
+- ✅ **FHEVM SDK integration with React hooks** ⭐ NEW
 
 ### Near Term (v1.1)
 - [ ] Pausable functionality for emergencies
 - [ ] Multi-sig for high-value auctions
 - [ ] Auction extensions (anti-sniping)
 - [ ] Bid increment rules
+- [ ] Enhanced UI/UX in React dApp
+- [ ] Real-time auction updates with WebSocket
 
 ### Future (v2.0)
 - [ ] Mainnet deployment
 - [ ] USDC/stablecoin integration
 - [ ] Dutch auction mechanism
 - [ ] NFT certificate of authenticity
-- [ ] Mobile app
+- [ ] Mobile app (React Native)
 - [ ] Multi-chain support
 - [ ] Confidential public transportation analytics
+- [ ] Advanced analytics dashboard
 
 ---
 
