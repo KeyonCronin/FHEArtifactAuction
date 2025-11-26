@@ -37,6 +37,42 @@ We've added a **production-ready React application** with cutting-edge web techn
 
 A revolutionary blockchain-based auction platform enabling collectors, museums, and art dealers to bid on authentic artifacts while maintaining **complete bidding privacy**. Built with Zama's FHEVM technology, all bid amounts remain encrypted on-chain, ensuring fair price discovery without revealing sensitive bidding strategies.
 
+### 🌟 Enhanced Features (v1.0)
+
+This implementation includes advanced features inspired by production-ready FHE applications:
+
+#### **🔄 Gateway Callback Pattern**
+- ✅ Asynchronous decryption via Zama Gateway oracle
+- ✅ Cryptographic signature verification with `FHE.checkSignatures()`
+- ✅ Automatic bid settlement after verification
+- ✅ Request tracking with unique IDs for monitoring
+
+#### **💰 Refund Mechanism**
+- ✅ Automatic refunds for losing bidders after auction settles
+- ✅ Failed auction refunds when decryption fails
+- ✅ Reentrancy-protected withdrawal functions
+- ✅ Precise ETH deposit tracking for accurate refunds
+
+#### **⏱️ Timeout Protection**
+- ✅ 7-day Gateway decryption timeout to prevent permanent fund locking
+- ✅ Anyone can trigger refunds after timeout expires
+- ✅ Comprehensive auction status tracking (active/ended/timed out)
+- ✅ Emergency recovery mechanism for all participants
+
+#### **🔐 Privacy Enhancements**
+- ✅ Price obfuscation with random multipliers (1.0x - 2.0x)
+- ✅ Division privacy protection using randomization
+- ✅ Encrypted bid storage with FHE permissions
+- ✅ Zero-knowledge bid comparisons
+
+#### **🛡️ Security Hardening**
+- ✅ Input validation with length limits (name ≤200, description ≤1000)
+- ✅ Reentrancy guards on all withdrawal functions
+- ✅ Access control with role-based permissions
+- ✅ Overflow protection (Solidity 0.8.24 checked arithmetic)
+- ✅ Gas optimization with batch size limits (50 bidders max)
+- ✅ Maximum auction duration protection (90 days)
+
 ### Core Concept: FHE Contracts for Privacy-Preserving Data
 
 This project demonstrates **Fully Homomorphic Encryption (FHE)** smart contracts for handling sensitive data across multiple domains:
@@ -79,6 +115,15 @@ This project demonstrates **Fully Homomorphic Encryption (FHE)** smart contracts
 - **Selective Disclosure**: Only winner and winning bid revealed after completion
 - **Permanent Privacy**: Losing bids remain permanently confidential
 - **FHE Data Types**: Support for `euint8`, `euint16`, `euint32`, `euint64`, `ebool`
+- **Price Obfuscation**: Random multipliers protect actual price information (1.0x - 2.0x range)
+- **Gateway Callback Pattern**: Asynchronous decryption with cryptographic verification
+
+### 💰 Advanced Financial Protection
+- **Refund Mechanism**: Automatic refunds for losing bidders
+- **Timeout Protection**: 7-day decryption timeout prevents permanent fund locking
+- **Failed Auction Handling**: Full refunds if decryption fails or times out
+- **Reentrancy Guards**: Protection against reentrancy attacks on withdrawals
+- **Deposit Tracking**: Precise tracking of ETH deposits for accurate refunds
 
 ### 🏺 Artifact Management
 - **Detailed Provenance**: Track ownership history and authenticity
@@ -102,13 +147,14 @@ This project demonstrates **Fully Homomorphic Encryption (FHE)** smart contracts
 
 ## 🏗️ Architecture
 
-### System Design
+### Enhanced System Design with Gateway Pattern
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │              Frontend (React + TypeScript + Vite)           │
 │  ├─ MetaMask Integration (Web3 Wallet)                     │
 │  ├─ ethers.js (Blockchain Communication)                   │
+│  ├─ FHE Client Encryption                                  │
 │  └─ Real-time Auction Display                              │
 └──────────────────┬──────────────────────────────────────────┘
                    │
@@ -118,10 +164,21 @@ This project demonstrates **Fully Homomorphic Encryption (FHE)** smart contracts
 │  ┌──────────────────────────────────────────────────┐      │
 │  │   ConfidentialArtifactAuction.sol                │      │
 │  │   ├─ FHE Encrypted Storage (euint64)            │      │
-│  │   ├─ Homomorphic Bid Comparison                 │      │
-│  │   ├─ Authentication System                       │      │
+│  │   ├─ Gateway Callback Pattern                    │      │
+│  │   ├─ Refund Mechanism                            │      │
+│  │   ├─ Timeout Protection (7 days)                │      │
+│  │   ├─ Price Obfuscation                           │      │
+│  │   ├─ Reentrancy Guards                           │      │
 │  │   └─ Automated Settlement                        │      │
 │  └──────────────────────────────────────────────────┘      │
+└──────────────────┬──────────────────────────────────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────────────────────────────┐
+│                 Zama Gateway (Decryption Oracle)            │
+│  ├─ Asynchronous Decryption                                │
+│  ├─ Cryptographic Signature Verification                   │
+│  └─ Callback Execution                                      │
 └──────────────────┬──────────────────────────────────────────┘
                    │
                    ▼
@@ -133,22 +190,40 @@ This project demonstrates **Fully Homomorphic Encryption (FHE)** smart contracts
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Data Flow
+### Enhanced Data Flow with Gateway Callbacks
 
 ```
-Seller Creates Auction
-         ↓
-Authenticator Verifies Artifact
-         ↓
-Bidders Submit Encrypted Bids (euint64)
-         ↓
-FHE Compares Bids Without Decryption
-         ↓
-Auction Ends → Highest Bidder Wins
-         ↓
-Winner & Amount Revealed
-         ↓
-Automated Payment Settlement
+1. Auction Creation Phase
+   └─ Seller Creates Auction + Price Obfuscation Seed Generated
+        └─ Authenticator Verifies Artifact
+
+2. Bidding Phase
+   └─ User Encrypts Bid (Client-side FHE)
+        └─ Submit Encrypted Bid + ETH Deposit
+             └─ Contract Stores: euint64(amount) + depositAmount
+                  └─ FHE.allowThis() & FHE.allow()
+
+3. Auction End Phase
+   └─ endAuction() Called
+        └─ FHE.requestDecryption() → Gateway
+             └─ Store requestId + timestamp
+
+4. Gateway Callback Phase
+   └─ Gateway Decrypts Bids
+        └─ Callback: processBidResults()
+             └─ FHE.checkSignatures() Verifies Oracle
+                  └─ Find Highest Bidder
+                       └─ Winner Determined
+
+5. Settlement Phase
+   ├─ Winner: Deposit transferred to seller
+   ├─ Losers: claimLoserRefund() to get deposits back
+   └─ Timeout Case: enableRefundsOnTimeout() + claimRefund()
+
+6. Timeout Protection (if Gateway fails)
+   └─ Wait 7 days after decryption request
+        └─ enableRefundsOnTimeout()
+             └─ All bidders can claimRefund()
 ```
 
 ---
@@ -257,49 +332,129 @@ npm run interact
 
 ## 🔧 Technical Implementation
 
-### FHEVM Integration
+### Enhanced FHEVM Integration
 
 Built with **Zama's FHEVM** - the first blockchain with native support for Fully Homomorphic Encryption.
 
-#### Encrypted Data Types
+#### Encrypted Data Types with Deposit Tracking
 
 ```solidity
 // Import Zama FHEVM library
-import { FHE, euint64, euint32, ebool } from "@fhevm/solidity/lib/FHE.sol";
+import { FHE, euint64, externalEuint64, ebool } from "@fhevm/solidity/lib/FHE.sol";
 
-// Encrypted bid storage
+// Enhanced encrypted bid storage with refund support
 struct EncryptedBid {
-    euint64 amount;        // Encrypted bid amount
-    bool isActive;         // Bid status
-    uint256 timestamp;     // Bid time
+    euint64 amount;           // Encrypted bid amount
+    bool isActive;            // Bid status
+    uint256 timestamp;        // Bid time
+    uint256 depositAmount;    // ETH deposit for refunds
 }
 ```
 
-#### Homomorphic Operations
+#### Gateway Callback Pattern Implementation
 
 ```solidity
-// Encrypt bid amount
-euint64 encryptedBid = FHE.asEuint64(_bidAmount);
+// Step 1: User submits encrypted bid with proof
+function placeBid(uint32 auctionId, externalEuint64 encryptedBidAmount, bytes calldata inputProof)
+    external payable
+{
+    // Import encrypted bid from external input
+    euint64 encryptedBid = FHE.fromExternal(encryptedBidAmount, inputProof);
 
-// Set FHE permissions
-FHE.allowThis(encryptedBid);
-FHE.allow(encryptedBid, msg.sender);
+    // Store bid with ETH deposit
+    bidsByAuction[auctionId][msg.sender] = EncryptedBid({
+        amount: encryptedBid,
+        isActive: true,
+        timestamp: block.timestamp,
+        depositAmount: msg.value  // Track deposit for refunds
+    });
 
-// Compare encrypted bids without decryption
-ebool isHigher = FHE.gt(newBid, currentHighest);
-```
-
-#### Secure Decryption
-
-```solidity
-// Request decryption of winning bid
-bytes32[] memory cts = new bytes32[](bidCount);
-for (uint256 i = 0; i < bidCount; i++) {
-    cts[i] = FHE.toBytes32(bidsByAuction[auctionId][bidders[i]].amount);
+    // Set FHE permissions
+    FHE.allowThis(encryptedBid);
+    FHE.allow(encryptedBid, msg.sender);
 }
 
-// Decrypt with verification
-FHE.requestDecryption(cts, this.processBidResults.selector);
+// Step 2: Request decryption via Gateway
+function _requestBidDecryption(uint32 auctionId) private {
+    bytes32[] memory cts = new bytes32[](bidCount);
+    for (uint256 i = 0; i < bidCount; i++) {
+        cts[i] = FHE.toBytes32(bidsByAuction[auctionId][bidders[i]].amount);
+    }
+
+    // Request decryption with callback
+    uint256 requestId = FHE.requestDecryption(cts, this.processBidResults.selector);
+
+    // Store request metadata for timeout tracking
+    auction.decryptionRequestId = requestId;
+    auction.decryptionRequestTime = block.timestamp;
+    auctionIdByRequestId[requestId] = auctionId;
+}
+
+// Step 3: Gateway callback with verified decryption
+function processBidResults(
+    uint256 requestId,
+    bytes memory cleartexts,
+    bytes memory signatures
+) external {
+    // Verify Gateway signatures (critical security check)
+    FHE.checkSignatures(requestId, cleartexts, signatures);
+
+    // Find auction and decode results
+    uint32 auctionId = auctionIdByRequestId[requestId];
+    uint64[] memory decryptedBids = abi.decode(cleartexts, (uint64[]));
+
+    // Determine winner and settle auction
+    // ...
+}
+```
+
+#### Timeout Protection & Refund Mechanism
+
+```solidity
+// Constants for protection
+uint256 public constant DECRYPTION_TIMEOUT = 7 days;
+uint256 public constant MAX_AUCTION_DURATION = 90 days;
+
+// Enable refunds if Gateway fails
+function enableRefundsOnTimeout(uint32 auctionId) external {
+    require(
+        block.timestamp >= auction.decryptionRequestTime + DECRYPTION_TIMEOUT,
+        "Timeout period not reached"
+    );
+    auction.refundsEnabled = true;
+}
+
+// Claim refund with reentrancy protection
+function claimRefund(uint32 auctionId) external nonReentrant {
+    require(auction.refundsEnabled, "Refunds not enabled");
+    uint256 refundAmount = bid.depositAmount;
+
+    // Update state before transfer
+    hasClaimedRefund[auctionId][msg.sender] = true;
+    bid.depositAmount = 0;
+
+    // Safe transfer
+    (bool success, ) = payable(msg.sender).call{value: refundAmount}("");
+    require(success, "Refund transfer failed");
+}
+```
+
+#### Price Obfuscation for Privacy
+
+```solidity
+// Generate obfuscation seed at auction creation
+uint256 obfuscationSeed = uint256(keccak256(abi.encodePacked(
+    block.timestamp,
+    block.prevrandao,
+    msg.sender,
+    currentAuctionId
+)));
+
+// Get obfuscated price (1.0x - 2.0x multiplier)
+function getObfuscatedPrice(uint32 auctionId) external view returns (uint256) {
+    uint256 multiplier = 100 + (auction.priceObfuscationSeed % 100);
+    return (auction.minimumBid * multiplier) / 100;
+}
 ```
 
 ### Smart Contract Architecture
@@ -510,13 +665,56 @@ Approximate gas costs on Sepolia:
 
 ## 🔒 Security
 
-### Security Features
+### Enhanced Security Features
 
 - ✅ **Access Control**: Role-based permissions (Owner, Authenticators, Users)
 - ✅ **FHE Privacy**: All bids encrypted with Zama FHEVM
-- ✅ **DoS Protection**: Gas limits and validation checks
-- ✅ **Input Validation**: Comprehensive parameter checking
-- ✅ **Event Logging**: Complete audit trail
+- ✅ **Gateway Verification**: Cryptographic signature validation via `FHE.checkSignatures()`
+- ✅ **Reentrancy Protection**: Guards on all withdrawal and refund functions
+- ✅ **Timeout Protection**: 7-day decryption timeout prevents permanent fund locking
+- ✅ **DoS Protection**: Batch size limits (50 bidders max) and gas optimization
+- ✅ **Input Validation**: Comprehensive parameter checking with length limits
+- ✅ **Overflow Protection**: Solidity 0.8.24 built-in checked arithmetic
+- ✅ **Price Privacy**: Obfuscation techniques prevent price leakage
+- ✅ **Event Logging**: Complete audit trail with refund tracking
+
+### Security Best Practices Implemented
+
+#### 1. **Input Validation**
+```solidity
+require(bytes(_name).length <= 200, "Name too long");
+require(bytes(_description).length <= 1000, "Description too long");
+require(_auctionDuration <= MAX_AUCTION_DURATION, "Invalid duration");
+require(bidCount <= MAX_BIDDERS_PER_BATCH, "Too many bidders");
+```
+
+#### 2. **Access Control**
+```solidity
+modifier onlyOwner() { require(msg.sender == owner, "Not authorized"); _; }
+modifier onlyAuthenticator() { require(authenticators[msg.sender], "Not an authenticator"); _; }
+modifier auctionActive(uint32 auctionId) { /* comprehensive checks */ _; }
+```
+
+#### 3. **Reentrancy Guards**
+```solidity
+modifier nonReentrant() {
+    require(_status != _ENTERED, "Reentrancy detected");
+    _status = _ENTERED;
+    _;
+    _status = _NOT_ENTERED;
+}
+```
+
+#### 4. **Safe ETH Transfers**
+```solidity
+// State changes before external calls
+hasClaimedRefund[auctionId][msg.sender] = true;
+bid.depositAmount = 0;
+
+// Safe call pattern
+(bool success, ) = payable(msg.sender).call{value: refundAmount}("");
+require(success, "Transfer failed");
+```
 
 ### Security Auditing
 
@@ -524,6 +722,7 @@ Approximate gas costs on Sepolia:
 - **Testing**: 45+ test assertions, 70%+ coverage
 - **Pre-commit Hooks**: Quality gates before commits
 - **CI/CD**: Automated security checks on every push
+- **Gateway Verification**: Cryptographic proofs for all decryptions
 
 See [SECURITY.md](SECURITY.md) for complete security documentation.
 
@@ -638,23 +837,184 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 
 ---
 
+## 📚 API Documentation
+
+### Core Functions
+
+#### Auction Management
+
+**`createAuction()`** - Create a new artifact auction
+```solidity
+function createAuction(
+    string memory _name,              // Artifact name (max 200 chars)
+    string memory _description,       // Description (max 1000 chars)
+    string memory _category,          // Category
+    uint256 _minimumBid,             // Minimum bid in wei
+    uint256 _auctionDuration,        // Duration in seconds (max 90 days)
+    uint256 _yearCreated,            // Year artifact created
+    string memory _provenance        // Provenance info
+) external returns (uint32 auctionId)
+```
+
+**`authenticateArtifact()`** - Verify artifact authenticity (authenticators only)
+```solidity
+function authenticateArtifact(uint32 auctionId) external onlyAuthenticator
+```
+
+**`endAuction()`** - End auction and request decryption
+```solidity
+function endAuction(uint32 auctionId) external
+// Triggers Gateway callback for bid decryption
+```
+
+#### Bidding Functions
+
+**`placeBid()`** - Submit encrypted bid with ETH deposit
+```solidity
+function placeBid(
+    uint32 auctionId,
+    externalEuint64 encryptedBidAmount,  // Encrypted bid from FHE client
+    bytes calldata inputProof            // ZK proof for encryption
+) external payable
+// msg.value must be >= minimumBid
+```
+
+#### Refund & Withdrawal Functions
+
+**`claimLoserRefund()`** - Losing bidders claim deposit refund
+```solidity
+function claimLoserRefund(uint32 auctionId) external nonReentrant
+// Available after auction settles, for non-winners
+```
+
+**`claimRefund()`** - Claim refund from failed auction
+```solidity
+function claimRefund(uint32 auctionId) external nonReentrant
+// Available when refundsEnabled = true (timeout case)
+```
+
+**`enableRefundsOnTimeout()`** - Enable refunds after Gateway timeout
+```solidity
+function enableRefundsOnTimeout(uint32 auctionId) external
+// Callable by anyone after 7 days from decryption request
+```
+
+**`withdrawEarnings()`** - Sellers withdraw earnings
+```solidity
+function withdrawEarnings() external nonReentrant
+```
+
+#### View Functions
+
+**`getAuctionInfo()`** - Get auction details
+```solidity
+function getAuctionInfo(uint32 auctionId) external view returns (
+    string memory name,
+    string memory description,
+    string memory category,
+    address seller,
+    uint256 startTime,
+    uint256 endTime,
+    uint256 minimumBid,
+    bool isActive,
+    bool authenticated,
+    uint256 totalBids
+)
+```
+
+**`getAuctionStatus()`** - Get comprehensive auction status
+```solidity
+function getAuctionStatus(uint32 auctionId) external view returns (
+    bool isActive,
+    bool isEnded,
+    bool decryptionRequested,
+    bool decryptionTimedOut,
+    bool refundsEnabled,
+    uint256 timeUntilTimeout
+)
+```
+
+**`canClaimRefund()`** - Check refund eligibility
+```solidity
+function canClaimRefund(uint32 auctionId, address user) external view returns (
+    bool canClaim,
+    string memory reason
+)
+```
+
+**`getObfuscatedPrice()`** - Get privacy-protected price estimate
+```solidity
+function getObfuscatedPrice(uint32 auctionId) external view returns (uint256)
+// Returns price with 1.0x - 2.0x random multiplier
+```
+
+**`getBidDetails()`** - Get bidder's bid information
+```solidity
+function getBidDetails(uint32 auctionId, address bidder) external view returns (
+    bool isActive,
+    uint256 timestamp,
+    uint256 depositAmount,
+    bool hasClaimedRefund_
+)
+```
+
+### Gateway Callback (Internal)
+
+**`processBidResults()`** - Gateway callback for decryption results
+```solidity
+function processBidResults(
+    uint256 requestId,
+    bytes memory cleartexts,
+    bytes memory signatures
+) external
+// Called by Gateway oracle with verified decryption results
+```
+
+### Events
+
+```solidity
+event AuctionCreated(uint32 indexed auctionId, string artifactName, address indexed seller, uint256 startTime, uint256 endTime, uint256 minimumBid);
+event ConfidentialBidPlaced(uint32 indexed auctionId, address indexed bidder, uint256 depositAmount);
+event AuctionEnded(uint32 indexed auctionId, address indexed winner, uint256 winningBid, string artifactName);
+event ArtifactAuthenticated(uint32 indexed auctionId, address authenticator);
+event DecryptionRequested(uint32 indexed auctionId, uint256 requestId, uint256 timestamp);
+event DecryptionFailed(uint32 indexed auctionId, uint256 requestId);
+event RefundsEnabled(uint32 indexed auctionId, string reason);
+event RefundIssued(uint32 indexed auctionId, address indexed bidder, uint256 amount);
+event EarningsWithdrawn(address indexed seller, uint256 amount);
+```
+
+### Constants
+
+```solidity
+uint256 public constant DECRYPTION_TIMEOUT = 7 days;      // Gateway timeout
+uint256 public constant MAX_AUCTION_DURATION = 90 days;   // Maximum auction length
+uint256 public constant MAX_BIDDERS_PER_BATCH = 50;       // Gas optimization limit
+```
+
+---
+
 ## 🗺️ Roadmap
 
-### Current (v1.0)
-- ✅ FHE-encrypted bidding
+### Current (v1.0) ✅
+- ✅ FHE-encrypted bidding with Gateway callbacks
+- ✅ Refund mechanism with timeout protection
+- ✅ Price obfuscation for privacy
+- ✅ Reentrancy guards and security hardening
 - ✅ Artifact authentication system
 - ✅ Automated settlement
 - ✅ Sepolia testnet deployment
-- ✅ **Modern React dApp with TypeScript + Vite** ⭐ NEW
-- ✅ **FHEVM SDK integration with React hooks** ⭐ NEW
+- ✅ **Modern React dApp with TypeScript + Vite** ⭐
+- ✅ **FHEVM SDK integration with React hooks** ⭐
 
 ### Near Term (v1.1)
 - [ ] Pausable functionality for emergencies
 - [ ] Multi-sig for high-value auctions
 - [ ] Auction extensions (anti-sniping)
 - [ ] Bid increment rules
-- [ ] Enhanced UI/UX in React dApp
+- [ ] Enhanced UI/UX in React dApp with refund interface
 - [ ] Real-time auction updates with WebSocket
+- [ ] Comprehensive test suite for new features
 
 ### Future (v2.0)
 - [ ] Mainnet deployment
@@ -665,6 +1025,7 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 - [ ] Multi-chain support
 - [ ] Confidential public transportation analytics
 - [ ] Advanced analytics dashboard
+- [ ] Batch auction processing for 50+ bidders
 
 ---
 
